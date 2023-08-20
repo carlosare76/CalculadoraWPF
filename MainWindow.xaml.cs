@@ -48,43 +48,98 @@ namespace ImplementacionCalculadora
         {
             //Registro operador numero 1
             Button btn = sender as Button;
-            NumTxt1 = NumTxt1 + (string)btn.Content;
-            NumOp1 = double.Parse(NumTxt1);
-            MostrarPantalla(NumTxt1);
-            
+
+            if (Op == "" && NumTxt2 == "")
+            {
+                NumTxt1 = NumTxt1 + (string)btn.Content;
+                NumOp1 = double.Parse(NumTxt1);
+
+                MostrarPantalla(NumTxt1);
+            }
+            else
+            {
+                NumTxt2 = NumTxt2 + (string)btn.Content;
+                NumOp2 = double.Parse(NumTxt2);
+                MostrarPantalla(NumTxt1, NumTxt2);
+            }
 
         }
         private void btnSigno(object sender, RoutedEventArgs e)
         {
             //Cambio signo negativo o positivo de operador 1
-            NumOp1 = NumOp1 * (-1);
-            NumTxt1= Convert.ToString(NumOp1);
-            MostrarPantalla(NumTxt1);
+            if (Op == "")
+            {
+                NumOp1 = NumOp1 * (-1);
+                NumTxt1 = Convert.ToString(NumOp1);
+                MostrarPantalla(NumTxt1);
+            }
+            else
+            {
+                NumOp2 = NumOp2 * (-1);
+                NumTxt2 = Convert.ToString(NumOp2);
+                MostrarPantalla(NumTxt1, NumTxt2);
+            }
+            
         }
         private void btnPunto(object sender, RoutedEventArgs e)
         {
             //Agregar punto decimal
-            if (NumTxt1 != "")
+            if (Op=="" && NumTxt1 != "" && NumOp1%1==0)
             {
                 NumTxt1 = NumTxt1 + ".";
+                MostrarPantalla(NumTxt1);
             }
-            
-            MostrarPantalla(NumTxt1);
+
+            if (Op != "" && NumTxt2 != "" && NumOp2 % 1 == 0)
+            {
+                NumTxt2 = NumTxt2 + ".";
+                MostrarPantalla(NumTxt1, NumTxt2);
+            }  
+
+
         }
         private void btnOperador(object sender, RoutedEventArgs e)
         {
+            //Añade operador
             Button btn = sender as Button;
 
+            if(Op=="" && NumTxt2 == "")
+            {
+                Op=(string)btn.Content;
+
+                MostrarPantalla(NumTxt1);
+            }
 
         }
 
         private void btnResultado(object sender, RoutedEventArgs e)
         {
+            //Procesa los operandos
+            if (Op != "")
+            {
+                switch(Op)
+                {
+                    case "+":
+                        resul = Convert.ToString(NumOp1 + NumOp2);
+                        break;
+                    case "-":
+                        resul = Convert.ToString(NumOp1 - NumOp2);
+                        break;
+                    case "*":
+                        resul = Convert.ToString(NumOp1 * NumOp2);
+                        break;
+                    case "/":
+                        resul = Convert.ToString(NumOp1 / NumOp2);
+                        break;
+                }
+            }
 
+            MostrarPantalla(NumTxt1, NumTxt2 );
         }
 
         private void MostrarPantalla(Object numero, Object numero2 = null)
         {
+            //Funcion para imprimir en pantalla
             if (resul == "") 
             {
                 if(Op=="")
@@ -93,7 +148,7 @@ namespace ImplementacionCalculadora
                 }
                 else
                 {
-                    pantalla.Text=Convert.ToString(numero)+Op+Convert.ToString(numero2);
+                    pantalla.Text="("+Convert.ToString(numero)+")"+Op+"("+Convert.ToString(numero2)+")";
                 }
             }
             else
